@@ -8,12 +8,12 @@
         Title="Chess" Height="640" Width="800" MinHeight="320" MinWidth="400" SizeChanged="Window_SizeChanged">
     <Window.Resources>
         <Style TargetType="Label" x:Key="BlackCell">
-            <Setter Property="Background" Value="#baca44"/>
+            <Setter Property="Background" Value="#964d22"/>
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="VerticalAlignment" Value="Stretch"/>
             <Setter Property="Width" Value="Auto"/>
             <Setter Property="Height" Value="Auto"/>
-            <Setter Property="Panel.ZIndex" Value="-1"/>
+            <Setter Property="Panel.ZIndex" Value="0"/>
         </Style>
         <Style TargetType="Label" x:Key="WhiteCell">
             <Setter Property="Background" Value="#eeeed2"/>
@@ -21,10 +21,26 @@
             <Setter Property="VerticalAlignment" Value="Stretch"/>
             <Setter Property="Width" Value="Auto"/>
             <Setter Property="Height" Value="Auto"/>
-            <Setter Property="Panel.ZIndex" Value="-1"/>
+            <Setter Property="Panel.ZIndex" Value="0"/>
+        </Style>
+        <Style TargetType="Label" x:Key="WhiteCellMove">
+            <Setter Property="Background" Value="#789a5f"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="Width" Value="Auto"/>
+            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="Panel.ZIndex" Value="1"/>
+        </Style>
+        <Style TargetType="Label" x:Key="BlackCellMove">
+            <Setter Property="Background" Value="#416624"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="Width" Value="Auto"/>
+            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="Panel.ZIndex" Value="1"/>
         </Style>
     </Window.Resources>
-    <Grid x:Name="Board">
+    <Grid x:Name="Board" MouseDown="Board_MouseDown">
         <Grid.RowDefinitions>
             <RowDefinition x:Name = "UpOffset" Height="0"/>
             <!-- -->

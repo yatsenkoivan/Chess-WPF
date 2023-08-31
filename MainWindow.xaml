@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Chess_WPF"
         mc:Ignorable="d"
-        Title="Chess" Height="640" Width="800" MinHeight="320" MinWidth="400" SizeChanged="Window_SizeChanged">
+        Title="Chess" Height="640" Width="800" MinHeight="320" MinWidth="400" SizeChanged="Window_SizeChanged" KeyDown="Window_KeyDown">
     <Window.Resources>
         <Style TargetType="Label" x:Key="BlackCell">
             <Setter Property="Background" Value="#964d22"/>
@@ -29,7 +29,7 @@
             <Setter Property="VerticalAlignment" Value="Stretch"/>
             <Setter Property="Width" Value="Auto"/>
             <Setter Property="Height" Value="Auto"/>
-            <Setter Property="Panel.ZIndex" Value="1"/>
+            <Setter Property="Panel.ZIndex" Value="0"/>
         </Style>
         <Style TargetType="Label" x:Key="BlackCellMove">
             <Setter Property="Background" Value="#416624"/>
@@ -37,7 +37,7 @@
             <Setter Property="VerticalAlignment" Value="Stretch"/>
             <Setter Property="Width" Value="Auto"/>
             <Setter Property="Height" Value="Auto"/>
-            <Setter Property="Panel.ZIndex" Value="1"/>
+            <Setter Property="Panel.ZIndex" Value="0"/>
         </Style>
     </Window.Resources>
     <Grid x:Name="Board" MouseDown="Board_MouseDown">

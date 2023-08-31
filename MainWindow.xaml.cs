@@ -11,6 +11,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Chess_WPF.Code;
@@ -71,9 +72,11 @@ namespace Chess_WPF
         }
         private void Board_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            double cell_size = (Board.Children[0] as Label).ActualWidth;
+            Point clickpos = e.GetPosition(Board);
 
-            Point clickpos = e.GetPosition(sender as IInputElement);
+            double cell_size = Board.RowDefinitions[1].ActualHeight;
+            //double cell_size = Math.Min(Width, Height) / 8;
+
 
             clickpos.X -= LeftOffset.ActualWidth;
             clickpos.Y -= UpOffset.ActualHeight;
@@ -86,22 +89,130 @@ namespace Chess_WPF
 
             if (start_coords == null)
             {
-                start_coords = coords;
 
                 //incorrect start cell
-                if (chess.CheckStartCoord(start_coords) == false) return;
+                if (chess.CheckStartCoord(coords) == false) return;
+
+                start_coords = coords;
 
                 HideMoveVariants();
                 chess.SetMoveVariants(start_coords);
                 ShowMoveVariants();
+                if (chess.move_variants.Count == 0) start_coords = null;
             }
             else
             {
-                //TODO
-
+                //incorrect end cell
+                if (CheckMove(start_coords, coords) == false) return;
+                PieceMove(start_coords, coords);
                 start_coords = null;
                 ChangePlayer();
             }
+        }
+        private void PieceMove(Coord start_coords, Coord end_coords)
+        {
+            int size_x = chess.board.GetLength(1);
+            int size_y = chess.board.GetLength(0);
+
+            Piece start = chess.board[start_coords.Y,start_coords.X];
+            Piece end = chess.board[end_coords.Y, end_coords.X];
+
+            Piece p = chess.board[start_coords.Y, start_coords.X];
+            if (p != null)
+            {
+
+                //EN PASSANT
+                if (p.Type == Piece.Types.pawn)
+                {
+                    if (Math.Abs(end_coords.X - start_coords.X) == 1 && chess.board[end_coords.Y, end_coords.X] == null) //corner & empty
+                    {
+                        Board.Children.Remove(chess.board[start_coords.Y, end_coords.X].img);
+                        chess.board[start_coords.Y, end_coords.X] = null;
+                    }
+                }
+
+                //KING CASTLING
+                if (p.Type == Piece.Types.rook)
+                {
+                    if (start_coords.X == 0)
+                    {
+                        if (chess.player == 1) chess.player1_castling.Long = false;
+                        if (chess.player == 2) chess.player2_castling.Long = false;
+                    }
+                    if (start_coords.X == size_x - 1)
+                    {
+                        if (chess.player == 1) chess.player1_castling.Short = false;
+                        if (chess.player == 2) chess.player2_castling.Short = false;
+                    }
+                }
+                if (p.Type == Piece.Types.king)
+                {
+                    //long castling
+                    if (((chess.player == 1 && chess.player1_castling.Long)
+                        ||
+                        (chess.player == 2 && chess.player2_castling.Long))
+                        && end_coords.X == 2)
+                    {
+                        Grid.SetColumn(chess.board[end_coords.Y, 0].img, end_coords.X + 1 + 1);
+
+                        chess.board[end_coords.Y, end_coords.X + 1] = chess.board[end_coords.Y, 0];
+                        chess.board[end_coords.Y, 0] = null;
+                    }
+
+                    //short castling
+                    if (((chess.player == 1 && chess.player1_castling.Short)
+                        ||
+                        (chess.player == 2 && chess.player2_castling.Short))
+                        && end_coords.X == size_x - 1 - 1)
+                    {
+                        Grid.SetColumn(chess.board[end_coords.Y, size_x - 1].img, end_coords.X - 1 + 1);
+
+                        chess.board[end_coords.Y, end_coords.X - 1] = chess.board[end_coords.Y, size_x - 1];
+                        chess.board[end_coords.Y, size_x - 1] = null;
+                    }
+
+
+                    if (chess.player == 1)
+                    {
+                        chess.player1_castling.Long = false;
+                        chess.player1_castling.Short = false;
+                    }
+                    if (chess.player == 2)
+                    {
+                        chess.player2_castling.Long = false;
+                        chess.player2_castling.Short = false;
+                    }
+                }
+            }
+
+            chess.board[start_coords.Y, start_coords.X] = null;
+            chess.board[end_coords.Y, end_coords.X] = start;
+
+            if (end != null) Board.Children.Remove(end.img);
+
+            Grid.SetRow(start.img, end_coords.Y + 1);
+            Grid.SetColumn(start.img, end_coords.X + 1);
+
+            HideMoveVariants();
+            chess.DelMoveVariants();
+
+            if (chess.player == 1)
+            {
+                chess.player1_moves.Add(new Move(start_coords, end_coords));
+            }
+            if (chess.player == 2)
+            {
+                chess.player2_moves.Add(new Move(start_coords, end_coords));
+            }
+        }
+        private bool CheckMove(Coord start_coords, Coord end_coords)
+        {
+            if (chess.move_variants.Any(coords => coords.Equals(end_coords)) == false) return false;
+
+            Piece p = chess.board[start_coords.Y,start_coords.X];
+            if (p == null) return false;
+
+            return true;
         }
         private void HideMoveVariants()
         {
@@ -133,6 +244,16 @@ namespace Chess_WPF
                 {
                     label.Style = Resources["BlackCellMove"] as Style;
                 }
+            }
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.X)
+            {
+                HideMoveVariants();
+                chess.DelMoveVariants();
+                start_coords = null;
             }
         }
     }

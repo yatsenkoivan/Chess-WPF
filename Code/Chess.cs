@@ -12,7 +12,7 @@ using System.Windows.Media.Media3D;
 
 namespace Chess_WPF.Code
 {
-    internal class Coord
+    internal class Coord : IEquatable<Coord>
     {
         public int X { set; get; }
         public int Y { set; get; }
@@ -20,6 +20,12 @@ namespace Chess_WPF.Code
         {
             X = x;
             Y = y;
+        }
+        public bool Equals(Coord other)
+        {
+            if (other == null)
+                return false;
+            return (this.X == other.X && this.Y == other.Y);
         }
     }
     internal class Castling
@@ -98,13 +104,17 @@ namespace Chess_WPF.Code
             board[7, 2] = new Piece(Piece.Types.bishop, Piece.Sides.white);
             board[7, 5] = new Piece(Piece.Types.bishop, Piece.Sides.white);
 
-            //KINGS
-            board[0, 3] = new Piece(Piece.Types.king, Piece.Sides.black);
-            board[7, 3] = new Piece(Piece.Types.king, Piece.Sides.white);
-
             //QUEENS
-            board[0, 4] = new Piece(Piece.Types.queen, Piece.Sides.black);
-            board[7, 4] = new Piece(Piece.Types.queen, Piece.Sides.white);
+            board[0, 3] = new Piece(Piece.Types.queen, Piece.Sides.black);
+            board[7, 3] = new Piece(Piece.Types.queen, Piece.Sides.white);
+
+            //KINGS
+            board[0, 4] = new Piece(Piece.Types.king, Piece.Sides.black);
+            board[7, 4] = new Piece(Piece.Types.king, Piece.Sides.white);
+        }
+        public void DelMoveVariants()
+        {
+            move_variants.Clear();
         }
         public void SetMoveVariants(Coord coords)
         {
@@ -140,8 +150,8 @@ namespace Chess_WPF.Code
                     {
                         if (coords.X >= 1 && board[coords.Y,coords.X - 1] != null
                             && board[coords.Y,coords.X - 1].Type == Piece.Types.pawn && board[coords.Y,coords.X - 1].Side == Piece.Sides.black
-                            && player2_moves.Last().start == new Coord(coords.X - 1, coords.Y - 2) //from
-                            && player2_moves.Last().end == new Coord(coords.X - 1, coords.Y)) //to
+                            && player2_moves.Last().start.Equals(new Coord(coords.X - 1, coords.Y - 2)) //from
+                            && player2_moves.Last().end.Equals(new Coord(coords.X - 1, coords.Y))) //to
                             move_variants.Add(new Coord(coords.X - 1, coords.Y - 1));
                     }
                 }
@@ -166,8 +176,8 @@ namespace Chess_WPF.Code
                     {
                         if (coords.X <= size_x - 1 - 1 && board[coords.Y,coords.X + 1] != null
                             && board[coords.Y,coords.X + 1].Type == Piece.Types.pawn && board[coords.Y,coords.X + 1].Side == Piece.Sides.white
-                            && player1_moves.Last().start == new Coord(coords.X + 1, coords.Y + 2) //from
-                            && player1_moves.Last().end == new Coord(coords.X + 1, coords.Y)) //to
+                            && player1_moves.Last().start.Equals(new Coord(coords.X + 1, coords.Y + 2)) //from
+                            && player1_moves.Last().end.Equals(new Coord(coords.X + 1, coords.Y))) //to
                             move_variants.Add(new Coord(coords.X + 1, coords.Y + 1));
                     }
                 }
@@ -387,11 +397,11 @@ namespace Chess_WPF.Code
                     if (board[coords.Y,coords.X + i] != null) right_castling = false;
                     if (board[coords.Y,coords.X - i] != null) left_castling = false;
                 }
-                if (left_castling && ((player == 1 && player1_castling.Short && player1_checked == false) || (player == 2 && player2_castling.Short && player2_checked == false))
+                if (left_castling && ((player == 1 && player1_castling.Long && player1_checked == false) || (player == 2 && player2_castling.Long && player2_checked == false))
                     && board[coords.Y,0] != null && board[coords.Y,0].Type == Piece.Types.rook)
                     move_variants.Add(new Coord(2, coords.Y));
-                if (right_castling && ((player == 1 && player1_castling.Long && player1_checked == false) || (player == 2 && player2_castling.Long && player2_checked == false))
-                    && board[coords.Y,0] != null && board[coords.Y,0].Type == Piece.Types.rook)
+                if (right_castling && ((player == 1 && player1_castling.Short && player1_checked == false) || (player == 2 && player2_castling.Short && player2_checked == false))
+                    && board[coords.Y,size_x-1] != null && board[coords.Y,size_x-1].Type == Piece.Types.rook)
                     move_variants.Add(new Coord(size_x - 1 - 1, coords.Y));
             }
         }

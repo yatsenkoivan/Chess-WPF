@@ -24,8 +24,28 @@ namespace Chess_WPF
     public partial class MainWindow : Window
     {
         Chess chess;
+        Label start_label;
         #nullable enable
         Coord? start_coords;
+        Coord? Start
+        {
+            get { return start_coords; }
+            set
+            {
+                if (value != null)
+                {
+                    start_label.Visibility = Visibility.Visible;
+                    Grid.SetRow(start_label, value.Y + 1);
+                    Grid.SetColumn(start_label, value.X + 1);
+                }
+                else
+                {
+                    start_label.Visibility = Visibility.Hidden;
+                }
+
+                start_coords = value;
+            }
+        }
         #nullable disable
         HashSet<Label> move_variant_labels;
         public MainWindow()
@@ -46,6 +66,12 @@ namespace Chess_WPF
                     }
                 }
             }
+
+            start_label = new Label();
+            start_label.Style = Resources["StartCell"] as Style;
+            Board.Children.Add(start_label);
+            Start = null;
+
             chess.player1_check_label.Style = Resources["Checked"] as Style;
             chess.player2_check_label.Style = Resources["Checked"] as Style;
 
@@ -98,29 +124,33 @@ namespace Chess_WPF
 
             Coord coords = new Coord((int)clickpos.X, (int)clickpos.Y);
 
-            if (start_coords == null)
+            //edge fix
+            coords.X = Math.Min(7, coords.X);
+            coords.Y = Math.Min(7, coords.Y);
+
+            if (Start == null)
             {
 
                 //incorrect start cell
                 if (chess.CheckStartCoord(coords) == false) return;
 
-                start_coords = coords;
+                Start = coords;
 
                 //HideMoveVariants();
                 DelMoveVariants();
-                chess.SetMoveVariants(start_coords);
-                chess.DelCheckMateMoves(start_coords);
+                chess.SetMoveVariants(Start);
+                chess.DelCheckMateMoves(Start);
                 ShowMoveVariants();
                 if (chess.move_variants.Count == 0) start_coords = null;
             }
             else
             {
                 //incorrect end cell
-                if (CheckMove(start_coords, coords) == false) return;
-                PieceMove(start_coords, coords);
+                if (CheckMove(Start, coords) == false) return;
+                PieceMove(Start, coords);
 
                 KingCheck(coords);
-                start_coords = null;
+                Start = null;
                 ChangePlayer();
             }
         }
@@ -280,7 +310,7 @@ namespace Chess_WPF
             if (e.Key == Key.X)
             {
                 DelMoveVariants();
-                start_coords = null;
+                Start = null;
             }
         }
     }

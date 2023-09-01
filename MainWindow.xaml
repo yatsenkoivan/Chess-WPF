@@ -39,6 +39,14 @@
             <Setter Property="Height" Value="Auto"/>
             <Setter Property="Panel.ZIndex" Value="-1"/>
         </Style>
+        <Style TargetType="Label" x:Key="StartCell">
+            <Setter Property="Background" Value="#87CEFA"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="Width" Value="Auto"/>
+            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="Panel.ZIndex" Value="-1"/>
+        </Style>
     </Window.Resources>
     <Grid x:Name="Board" MouseDown="Board_MouseDown">
         <Grid.RowDefinitions>

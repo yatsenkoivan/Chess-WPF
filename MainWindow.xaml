@@ -24,7 +24,7 @@
             <Setter Property="Panel.ZIndex" Value="-1"/>
         </Style>
         <Style TargetType="Label" x:Key="Variant">
-            <Setter Property="Background" Value="#7f00ff00"/>
+            <Setter Property="Background" Value="#c0006400"/>
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="VerticalAlignment" Value="Stretch"/>
             <Setter Property="Width" Value="Auto"/>
@@ -40,7 +40,7 @@
             <Setter Property="Panel.ZIndex" Value="-1"/>
         </Style>
         <Style TargetType="Label" x:Key="StartCell">
-            <Setter Property="Background" Value="#87CEFA"/>
+            <Setter Property="Background" Value="#2277aa"/>
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="VerticalAlignment" Value="Stretch"/>
             <Setter Property="Width" Value="Auto"/>

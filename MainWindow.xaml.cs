@@ -27,10 +27,12 @@ namespace Chess_WPF
         #nullable enable
         Coord? start_coords;
         #nullable disable
+        HashSet<Label> move_variant_labels;
         public MainWindow()
         {
             InitializeComponent();
             chess = new Chess();
+            move_variant_labels = new HashSet<Label>();
 
             for (int row = 0; row < 8; row++)
             {
@@ -44,6 +46,15 @@ namespace Chess_WPF
                     }
                 }
             }
+            chess.player1_check_label.Style = Resources["Checked"] as Style;
+            chess.player2_check_label.Style = Resources["Checked"] as Style;
+
+            chess.player1_check_label.Visibility = Visibility.Hidden;
+            chess.player2_check_label.Visibility = Visibility.Hidden;
+
+            Board.Children.Add(chess.player1_check_label);
+            Board.Children.Add(chess.player2_check_label);
+
             UpdateTitle();
         }
         private void ChangePlayer()
@@ -80,7 +91,7 @@ namespace Chess_WPF
 
             clickpos.X -= LeftOffset.ActualWidth;
             clickpos.Y -= UpOffset.ActualHeight;
-            //Title = $"{clickpos.X} {clickpos.Y} : {cell_size}";
+            //Title = $"{chess.player1_king_coords.X} {chess.player2_king_coords.Y}";
 
             clickpos.X /= cell_size;
             clickpos.Y /= cell_size;
@@ -95,8 +106,10 @@ namespace Chess_WPF
 
                 start_coords = coords;
 
-                HideMoveVariants();
+                //HideMoveVariants();
+                DelMoveVariants();
                 chess.SetMoveVariants(start_coords);
+                chess.DelCheckMateMoves(start_coords);
                 ShowMoveVariants();
                 if (chess.move_variants.Count == 0) start_coords = null;
             }
@@ -105,6 +118,8 @@ namespace Chess_WPF
                 //incorrect end cell
                 if (CheckMove(start_coords, coords) == false) return;
                 PieceMove(start_coords, coords);
+
+                KingCheck(coords);
                 start_coords = null;
                 ChangePlayer();
             }
@@ -147,6 +162,8 @@ namespace Chess_WPF
                 }
                 if (p.Type == Piece.Types.king)
                 {
+                    if (chess.player == 1) chess.Player1_king = end_coords;
+                    if (chess.player == 2) chess.Player2_king = end_coords;
                     //long castling
                     if (((chess.player == 1 && chess.player1_castling.Long)
                         ||
@@ -193,8 +210,7 @@ namespace Chess_WPF
             Grid.SetRow(start.img, end_coords.Y + 1);
             Grid.SetColumn(start.img, end_coords.X + 1);
 
-            HideMoveVariants();
-            chess.DelMoveVariants();
+            DelMoveVariants();
 
             if (chess.player == 1)
             {
@@ -214,19 +230,26 @@ namespace Chess_WPF
 
             return true;
         }
-        private void HideMoveVariants()
+        private void KingCheck(Coord coord)
         {
-            Label label;
-            foreach (Coord coords in chess.move_variants)
+            chess.player1_checked = false;
+            chess.player1_check_label.Visibility = Visibility.Hidden;
+
+            chess.player2_checked = false;
+            chess.player2_check_label.Visibility = Visibility.Hidden;
+
+
+            if (chess.KingCheck(coord))
             {
-                label = Board.Children[coords.Y * chess.board.GetLength(0) + coords.X] as Label;
-                if (label.Style == Resources["WhiteCellMove"] as Style)
+                if (chess.player == 1)
                 {
-                    label.Style = Resources["WhiteCell"] as Style;
+                    chess.player2_checked = true;
+                    chess.player2_check_label.Visibility = Visibility.Visible;
                 }
-                else
+                if (chess.player == 2)
                 {
-                    label.Style = Resources["BlackCell"] as Style;
+                    chess.player1_checked = true;
+                    chess.player1_check_label.Visibility = Visibility.Visible;
                 }
             }
         }
@@ -235,24 +258,28 @@ namespace Chess_WPF
             Label label;
             foreach (Coord coords in chess.move_variants)
             {
-                label = Board.Children[coords.Y * chess.board.GetLength(0) + coords.X] as Label;
-                if (label.Style == Resources["WhiteCell"] as Style)
-                {
-                    label.Style = Resources["WhiteCellMove"] as Style;
-                }
-                else
-                {
-                    label.Style = Resources["BlackCellMove"] as Style;
-                }
+                label = new Label();
+                label.Style = Resources["Variant"] as Style;
+                move_variant_labels.Add(label);
+                Board.Children.Add(label);
+                Grid.SetRow(label, coords.Y + 1);
+                Grid.SetColumn(label, coords.X + 1);
             }
         }
-
+        private void DelMoveVariants()
+        {
+            foreach (Label label in move_variant_labels)
+            {
+                Board.Children.Remove(label);
+            }
+            move_variant_labels.Clear();
+            chess.DelMoveVariants();
+        }
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.X)
             {
-                HideMoveVariants();
-                chess.DelMoveVariants();
+                DelMoveVariants();
                 start_coords = null;
             }
         }

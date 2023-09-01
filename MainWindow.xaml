@@ -13,7 +13,7 @@
             <Setter Property="VerticalAlignment" Value="Stretch"/>
             <Setter Property="Width" Value="Auto"/>
             <Setter Property="Height" Value="Auto"/>
-            <Setter Property="Panel.ZIndex" Value="0"/>
+            <Setter Property="Panel.ZIndex" Value="-1"/>
         </Style>
         <Style TargetType="Label" x:Key="WhiteCell">
             <Setter Property="Background" Value="#eeeed2"/>
@@ -21,23 +21,23 @@
             <Setter Property="VerticalAlignment" Value="Stretch"/>
             <Setter Property="Width" Value="Auto"/>
             <Setter Property="Height" Value="Auto"/>
-            <Setter Property="Panel.ZIndex" Value="0"/>
+            <Setter Property="Panel.ZIndex" Value="-1"/>
         </Style>
-        <Style TargetType="Label" x:Key="WhiteCellMove">
-            <Setter Property="Background" Value="#789a5f"/>
+        <Style TargetType="Label" x:Key="Variant">
+            <Setter Property="Background" Value="#7f00ff00"/>
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="VerticalAlignment" Value="Stretch"/>
             <Setter Property="Width" Value="Auto"/>
             <Setter Property="Height" Value="Auto"/>
-            <Setter Property="Panel.ZIndex" Value="0"/>
+            <Setter Property="Panel.ZIndex" Value="-1"/>
         </Style>
-        <Style TargetType="Label" x:Key="BlackCellMove">
-            <Setter Property="Background" Value="#416624"/>
+        <Style TargetType="Label" x:Key="Checked">
+            <Setter Property="Background" Value="#ff0000"/>
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="VerticalAlignment" Value="Stretch"/>
             <Setter Property="Width" Value="Auto"/>
             <Setter Property="Height" Value="Auto"/>
-            <Setter Property="Panel.ZIndex" Value="0"/>
+            <Setter Property="Panel.ZIndex" Value="-1"/>
         </Style>
     </Window.Resources>
     <Grid x:Name="Board" MouseDown="Board_MouseDown">

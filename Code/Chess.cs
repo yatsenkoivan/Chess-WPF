@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chess_WPF.Properties;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
@@ -63,6 +65,40 @@ namespace Chess_WPF.Code
         public List<Move> player2_moves;
         public bool player1_checked;
         public bool player2_checked;
+
+        public Label player1_check_label;
+        public Label player2_check_label;
+
+        private Coord player1_king_coords;
+        private Coord player2_king_coords;
+
+        public Coord Player1_king
+        {
+            set
+            {
+                Grid.SetColumn(player1_check_label, value.X+1);
+                Grid.SetRow(player1_check_label, value.Y+1);
+                player1_king_coords = value;
+            }
+            get
+            {
+                return player1_king_coords;
+            }
+        }
+        public Coord Player2_king
+        {
+            set
+            {
+                Grid.SetColumn(player2_check_label, value.X+1);
+                Grid.SetRow(player2_check_label, value.Y+1);
+                player2_king_coords = value;
+            }
+            get
+            {
+                return player2_king_coords;
+            }
+        }
+
         public Chess()
         {
             board = new Piece[8, 8];
@@ -77,6 +113,12 @@ namespace Chess_WPF.Code
             player2_moves = new List<Move>();
             player1_checked = false;
             player2_checked = false;
+
+            player1_check_label = new Label();
+            player2_check_label = new Label();
+
+            Player1_king = new Coord(4, 7);
+            Player2_king = new Coord(4, 0);
         }
         public void SetBoard()
         {
@@ -119,8 +161,8 @@ namespace Chess_WPF.Code
         public void SetMoveVariants(Coord coords)
         {
 
-            int size_x = board.GetLength(0);
-            int size_y = board.GetLength(1);
+            int size_x = board.GetLength(1);
+            int size_y = board.GetLength(0);
 
             Piece p = board[coords.Y,coords.X];
             if (p == null) return;
@@ -390,8 +432,9 @@ namespace Chess_WPF.Code
                 if (coords.X - 1 >= 0 && coords.Y - 1 >= 0 && (board[coords.Y - 1,coords.X - 1] == null || board[coords.Y - 1,coords.X - 1].Side != p.Side))
                     move_variants.Add(new Coord(coords.X - 1, coords.Y - 1));
 
-                bool left_castling = true;
-                bool right_castling = true;
+                bool left_castling = true;  //long
+                bool right_castling = true; //short
+                //check if not piees between king and rook
                 for (int i = 1; coords.X - i > 0 && coords.X + i < size_x - 1 && (left_castling || right_castling); i++)
                 {
                     if (board[coords.Y,coords.X + i] != null) right_castling = false;
@@ -404,6 +447,98 @@ namespace Chess_WPF.Code
                     && board[coords.Y,size_x-1] != null && board[coords.Y,size_x-1].Type == Piece.Types.rook)
                     move_variants.Add(new Coord(size_x - 1 - 1, coords.Y));
             }
+        }
+        public bool KingCheck(Coord start)
+        {
+            int size_y = board.GetLength(0);
+            int size_x = board.GetLength(1);
+
+            if (start.X < 0 || start.X > size_x - 1 || start.Y < 0 || start.Y > size_y - 1) return false;
+            Piece p = board[start.Y,start.X];
+            if (p == null)
+                return false;
+
+            SetMoveVariants(start); //get all possible moves
+
+            bool flag = false;
+
+            foreach (Coord coords in move_variants)
+            {
+                if (p.Side == Piece.Sides.white)
+                {
+                    if (coords.Equals(player2_king_coords))
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (p.Side == Piece.Sides.black)
+                {
+                    if (coords.Equals(player1_king_coords))
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+
+            move_variants.Clear();
+            return flag;
+        }
+        public void DelCheckMateMoves(Coord start)
+        {
+            int size_y = board.GetLength(0);
+            int size_x = board.GetLength(1);
+
+            Piece temp;
+            HashSet<Coord> new_move_variants = new HashSet<Coord>(move_variants);
+            HashSet<Coord> old_move_variants = new HashSet<Coord>(move_variants);
+            foreach (Coord coords in old_move_variants)
+            {
+
+                //simulate new board
+                temp = board[coords.Y,coords.X]; //new cell of the figure (null or enemy)
+                board[coords.Y,coords.X] = board[start.Y,start.X];
+                board[start.Y,start.X] = null;
+
+                //king moves
+                if (board[coords.Y,coords.X] != null && board[coords.Y,coords.X].Type == Piece.Types.king)
+                {
+                    if (board[coords.Y,coords.X].Side == Piece.Sides.white)
+                        player1_king_coords = coords;
+                    if (board[coords.Y, coords.X].Side == Piece.Sides.black)
+                        player2_king_coords = coords;
+                }
+
+                for (int row = 0; row < size_y; row++)
+                {
+                    for (int col = 0; col < size_x; col++)
+                    {
+                        if (board[row,col] == null
+                            || (board[row,col].Side == Piece.Sides.white && player == 1)
+                            || (board[row,col].Side == Piece.Sides.black && player == 2)) continue;
+
+                        if (KingCheck(new Coord(col, row)))
+                        {
+                            new_move_variants.Remove(coords);
+                        }
+                    }
+                }
+
+                //king moves
+                if (board[coords.Y,coords.X] != null && board[coords.Y,coords.X].Type == Piece.Types.king)
+                {
+                    if (board[coords.Y,coords.X].Side == Piece.Sides.white)
+                        player1_king_coords = start;
+                    if (board[coords.Y, coords.X].Side == Piece.Sides.black)
+                        player2_king_coords = start;
+                }
+
+                board[start.Y,start.X] = board[coords.Y,coords.X];
+                board[coords.Y,coords.X] = temp;
+
+            }
+            move_variants = new HashSet<Coord>(new_move_variants);
         }
         public bool CheckStartCoord(Coord coords)
         {

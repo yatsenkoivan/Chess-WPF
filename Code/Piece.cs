@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-abstract class PieceImages
+static class PieceImages
 {
     public static readonly BitmapImage pawn_white = new BitmapImage(new Uri(@"images/pawn_white.png", UriKind.Relative));
 

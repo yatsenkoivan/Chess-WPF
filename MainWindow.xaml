@@ -48,107 +48,129 @@
             <Setter Property="Panel.ZIndex" Value="-1"/>
         </Style>
     </Window.Resources>
-    <Grid x:Name="Board" MouseDown="Board_MouseDown">
-        <Grid.RowDefinitions>
-            <RowDefinition x:Name = "UpOffset" Height="0"/>
-            <!-- -->
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <!-- -->
-            <RowDefinition x:Name = "DownOffset" Height="0"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Name = "LeftOffset" Width="1*"/>
-            <!-- -->
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <!-- -->
-            <ColumnDefinition x:Name = "RightOffset" Width="1*"/>
-        </Grid.ColumnDefinitions>
-        <!-- ROW1 -->
-        <Label Grid.Row = "1" Grid.Column="1" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "1" Grid.Column="2" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "1" Grid.Column="3" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "1" Grid.Column="4" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "1" Grid.Column="5" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "1" Grid.Column="6" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "1" Grid.Column="7" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "1" Grid.Column="8" Style="{StaticResource WhiteCell}"/>
-        <!-- ROW2 -->
-        <Label Grid.Row = "2" Grid.Column="1" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "2" Grid.Column="2" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "2" Grid.Column="3" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "2" Grid.Column="4" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "2" Grid.Column="5" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "2" Grid.Column="6" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "2" Grid.Column="7" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "2" Grid.Column="8" Style="{StaticResource BlackCell}"/>
-        <!-- ROW3 -->
-        <Label Grid.Row = "3" Grid.Column="1" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "3" Grid.Column="2" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "3" Grid.Column="3" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "3" Grid.Column="4" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "3" Grid.Column="5" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "3" Grid.Column="6" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "3" Grid.Column="7" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "3" Grid.Column="8" Style="{StaticResource WhiteCell}"/>
-        <!-- ROW4 -->
-        <Label Grid.Row = "4" Grid.Column="1" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "4" Grid.Column="2" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "4" Grid.Column="3" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "4" Grid.Column="4" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "4" Grid.Column="5" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "4" Grid.Column="6" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "4" Grid.Column="7" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "4" Grid.Column="8" Style="{StaticResource BlackCell}"/>
-        <!-- ROW5 -->
-        <Label Grid.Row = "5" Grid.Column="1" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "5" Grid.Column="2" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "5" Grid.Column="3" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "5" Grid.Column="4" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "5" Grid.Column="5" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "5" Grid.Column="6" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "5" Grid.Column="7" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "5" Grid.Column="8" Style="{StaticResource WhiteCell}"/>
-        <!-- ROW6 -->
-        <Label Grid.Row = "6" Grid.Column="1" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "6" Grid.Column="2" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "6" Grid.Column="3" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "6" Grid.Column="4" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "6" Grid.Column="5" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "6" Grid.Column="6" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "6" Grid.Column="7" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "6" Grid.Column="8" Style="{StaticResource BlackCell}"/>
-        <!-- ROW7 -->
-        <Label Grid.Row = "7" Grid.Column="1" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "7" Grid.Column="2" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "7" Grid.Column="3" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "7" Grid.Column="4" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "7" Grid.Column="5" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "7" Grid.Column="6" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "7" Grid.Column="7" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "7" Grid.Column="8" Style="{StaticResource WhiteCell}"/>
-        <!-- ROW8 -->
-        <Label Grid.Row = "8" Grid.Column="1" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "8" Grid.Column="2" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "8" Grid.Column="3" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "8" Grid.Column="4" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "8" Grid.Column="5" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "8" Grid.Column="6" Style="{StaticResource BlackCell}"/>
-        <Label Grid.Row = "8" Grid.Column="7" Style="{StaticResource WhiteCell}"/>
-        <Label Grid.Row = "8" Grid.Column="8" Style="{StaticResource BlackCell}"/>
+    <DockPanel>
+        <Label x:Name="LeftOffset" Width="80" DockPanel.Dock="Left"/>
+        <Label x:Name="RightOffset" Width="80" DockPanel.Dock="Right"/>
+        <Label x:Name="TopOffset" Height="0" DockPanel.Dock="Top"/>
+        <Label x:Name="BottomOffset" Height="0" DockPanel.Dock="Bottom"/>
 
-    </Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <!-- ROW1 -->
+            <Label Grid.Row = "0" Grid.Column="0" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "0" Grid.Column="1" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "0" Grid.Column="2" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "0" Grid.Column="3" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "0" Grid.Column="4" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "0" Grid.Column="5" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "0" Grid.Column="6" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "0" Grid.Column="7" Style="{StaticResource WhiteCell}"/>
+            <!-- ROW2 -->
+            <Label Grid.Row = "1" Grid.Column="0" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "1" Grid.Column="1" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "1" Grid.Column="2" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "1" Grid.Column="3" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "1" Grid.Column="4" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "1" Grid.Column="5" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "1" Grid.Column="6" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "1" Grid.Column="7" Style="{StaticResource BlackCell}"/>
+            <!-- ROW3 -->
+            <Label Grid.Row = "2" Grid.Column="0" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "2" Grid.Column="1" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "2" Grid.Column="2" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "2" Grid.Column="3" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "2" Grid.Column="4" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "2" Grid.Column="5" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "2" Grid.Column="6" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "2" Grid.Column="7" Style="{StaticResource WhiteCell}"/>
+            <!-- ROW4 -->
+            <Label Grid.Row = "3" Grid.Column="0" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "3" Grid.Column="1" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "3" Grid.Column="2" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "3" Grid.Column="3" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "3" Grid.Column="4" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "3" Grid.Column="5" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "3" Grid.Column="6" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "3" Grid.Column="7" Style="{StaticResource BlackCell}"/>
+            <!-- ROW5 -->
+            <Label Grid.Row = "4" Grid.Column="0" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "4" Grid.Column="1" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "4" Grid.Column="2" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "4" Grid.Column="3" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "4" Grid.Column="4" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "4" Grid.Column="5" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "4" Grid.Column="6" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "4" Grid.Column="7" Style="{StaticResource WhiteCell}"/>
+            <!-- ROW6 -->
+            <Label Grid.Row = "5" Grid.Column="0" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "5" Grid.Column="1" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "5" Grid.Column="2" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "5" Grid.Column="3" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "5" Grid.Column="4" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "5" Grid.Column="5" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "5" Grid.Column="6" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "5" Grid.Column="7" Style="{StaticResource BlackCell}"/>
+            <!-- ROW7 -->
+            <Label Grid.Row = "6" Grid.Column="0" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "6" Grid.Column="1" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "6" Grid.Column="2" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "6" Grid.Column="3" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "6" Grid.Column="4" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "6" Grid.Column="5" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "6" Grid.Column="6" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "6" Grid.Column="7" Style="{StaticResource WhiteCell}"/>
+            <!-- ROW8 -->
+            <Label Grid.Row = "7" Grid.Column="0" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "7" Grid.Column="1" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "7" Grid.Column="2" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "7" Grid.Column="3" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "7" Grid.Column="4" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "7" Grid.Column="5" Style="{StaticResource BlackCell}"/>
+            <Label Grid.Row = "7" Grid.Column="6" Style="{StaticResource WhiteCell}"/>
+            <Label Grid.Row = "7" Grid.Column="7" Style="{StaticResource BlackCell}"/>
+
+            <Grid x:Name="Board" Grid.RowSpan="8" Grid.ColumnSpan="8" MouseDown="Board_MouseDown">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+            </Grid>
+
+        </Grid>
+    </DockPanel>
 </Window>

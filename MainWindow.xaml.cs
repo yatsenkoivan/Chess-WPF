@@ -35,8 +35,8 @@ namespace Chess_WPF
                 if (value != null)
                 {
                     start_label.Visibility = Visibility.Visible;
-                    Grid.SetRow(start_label, value.Y + 1);
-                    Grid.SetColumn(start_label, value.X + 1);
+                    Grid.SetRow(start_label, value.Y);
+                    Grid.SetColumn(start_label, value.X);
                 }
                 else
                 {
@@ -51,21 +51,16 @@ namespace Chess_WPF
         public MainWindow()
         {
             InitializeComponent();
+
+            StartGame();
+            
+        }
+        private void StartGame()
+        {
             chess = new Chess();
             move_variant_labels = new HashSet<Label>();
 
-            for (int row = 0; row < 8; row++)
-            {
-                for (int col = 0; col < 8; col++)
-                {
-                    if (chess.board[row, col] != null)
-                    {
-                        Board.Children.Add(chess.board[row, col].img);
-                        Grid.SetRow(chess.board[row, col].img, row + 1);
-                        Grid.SetColumn(chess.board[row, col].img, col + 1);
-                    }
-                }
-            }
+            ShowPieces();
 
             start_label = new Label();
             start_label.Style = Resources["StartCell"] as Style;
@@ -100,12 +95,10 @@ namespace Chess_WPF
             double offset_x = Math.Max((this.ActualWidth - board_size) / 2, 0);
             double offset_y = Math.Max((this.ActualHeight - board_size) / 2, 0);
 
-            GridLength horizonal = new GridLength(offset_x);
-            GridLength vertical = new GridLength(offset_y);
-            LeftOffset.Width = horizonal;
-            RightOffset.Width = horizonal;
-            UpOffset.Height = vertical;
-            DownOffset.Height = vertical;
+            LeftOffset.Width = offset_x;
+            RightOffset.Width = offset_x;
+            TopOffset.Height = offset_y;
+            BottomOffset.Height = offset_y;
         }
         private void Board_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -115,8 +108,8 @@ namespace Chess_WPF
             //double cell_size = Math.Min(Width, Height) / 8;
 
 
-            clickpos.X -= LeftOffset.ActualWidth;
-            clickpos.Y -= UpOffset.ActualHeight;
+            //clickpos.X -= LeftOffset.ActualWidth;
+            //clickpos.Y -= TopOffset.ActualHeight;
             //Title = $"{chess.player1_king_coords.X} {chess.player2_king_coords.Y}";
 
             clickpos.X /= cell_size;
@@ -128,36 +121,51 @@ namespace Chess_WPF
             coords.X = Math.Min(7, coords.X);
             coords.Y = Math.Min(7, coords.Y);
 
+            Piece p = chess.board[coords.Y, coords.X];
+
             if (Start == null)
             {
-
-                //incorrect start cell
-                if (chess.CheckStartCoord(coords) == false) return;
-
-                Start = coords;
-
-                //HideMoveVariants();
-                DelMoveVariants();
-                chess.SetMoveVariants(Start);
-                chess.DelCheckMateMoves(Start);
-                ShowMoveVariants();
-                if (chess.move_variants.Count == 0) start_coords = null;
+                ChooseStart(coords);
             }
             else
             {
-                //incorrect end cell
-                if (CheckMove(Start, coords) == false) return;
-                PieceMove(Start, coords);
-
-                KingCheck(coords);
-                Start = null;
-                ChangePlayer();
+                //choose another piece
+                if ((chess.player == 1 && p != null && p.Side == Piece.Sides.white)
+                    ||
+                    (chess.player == 2 && p != null && p.Side == Piece.Sides.black)) ChooseStart(coords);
+                //else
+                else
+                    ChooseEnd(coords);
             }
+        }
+        private void ChooseEnd(Coord coords)
+        {
+            //incorrect end cell
+            if (CheckMove(Start, coords) == false) return;
+            PieceMove(Start, coords);
+
+            KingCheck(coords);
+            Start = null;
+            ChangePlayer();
+
+            GameEndCheck();
+        }
+        private void ChooseStart(Coord coords)
+        {
+            //incorrect start cell
+            if (chess.CheckStartCoord(coords) == false) return;
+            Start = coords;
+
+            //HideMoveVariants();
+            DelMoveVariants();
+            chess.SetMoveVariants(Start);
+            chess.DelCheckMateMoves(Start);
+            ShowMoveVariants();
+            if (chess.move_variants.Count == 0) start_coords = null;
         }
         private void PieceMove(Coord start_coords, Coord end_coords)
         {
-            int size_x = chess.board.GetLength(1);
-            int size_y = chess.board.GetLength(0);
+            int size_x = chess.board.GetLength(0);
 
             Piece start = chess.board[start_coords.Y,start_coords.X];
             Piece end = chess.board[end_coords.Y, end_coords.X];
@@ -200,7 +208,7 @@ namespace Chess_WPF
                         (chess.player == 2 && chess.player2_castling.Long))
                         && end_coords.X == 2)
                     {
-                        Grid.SetColumn(chess.board[end_coords.Y, 0].img, end_coords.X + 1 + 1);
+                        Grid.SetColumn(chess.board[end_coords.Y, 0].img, end_coords.X + 1);
 
                         chess.board[end_coords.Y, end_coords.X + 1] = chess.board[end_coords.Y, 0];
                         chess.board[end_coords.Y, 0] = null;
@@ -212,7 +220,7 @@ namespace Chess_WPF
                         (chess.player == 2 && chess.player2_castling.Short))
                         && end_coords.X == size_x - 1 - 1)
                     {
-                        Grid.SetColumn(chess.board[end_coords.Y, size_x - 1].img, end_coords.X - 1 + 1);
+                        Grid.SetColumn(chess.board[end_coords.Y, size_x - 1].img, end_coords.X - 1);
 
                         chess.board[end_coords.Y, end_coords.X - 1] = chess.board[end_coords.Y, size_x - 1];
                         chess.board[end_coords.Y, size_x - 1] = null;
@@ -237,8 +245,8 @@ namespace Chess_WPF
 
             if (end != null) Board.Children.Remove(end.img);
 
-            Grid.SetRow(start.img, end_coords.Y + 1);
-            Grid.SetColumn(start.img, end_coords.X + 1);
+            Grid.SetRow(start.img, end_coords.Y);
+            Grid.SetColumn(start.img, end_coords.X);
 
             DelMoveVariants();
 
@@ -283,6 +291,67 @@ namespace Chess_WPF
                 }
             }
         }
+        private void GameEndCheck()
+        {
+            int size_y = chess.board.GetLength(0);
+            int size_x = chess.board.GetLength(1);
+
+            //CheckMate / StaleMate check
+            for (int row = 0; row < size_y && chess.move_variants.Count == 0; row++)
+            {
+                for (int col = 0; col < size_x && chess.move_variants.Count == 0; col++)
+                {
+                    if (chess.board[row, col] == null) continue;
+                    if ((chess.board[row, col].Side == Piece.Sides.white && chess.player == 1)
+                        ||
+                        (chess.board[row, col].Side == Piece.Sides.black && chess.player == 2))
+                    {
+                        chess.SetMoveVariants(new Coord(col, row));
+                        chess.DelCheckMateMoves(new Coord(col, row));
+                    }
+                }
+            }
+            //NO MOVES
+            if (chess.move_variants.Count == 0)
+            {
+                if (chess.player == 1 && chess.player1_checked)
+                    GameEnd("Player 2 Won! by a checkmate");
+                else if (chess.player == 2 && chess.player2_checked)
+                    GameEnd("Player 1 Won! by a checkmate");
+                else
+                    GameEnd("Draw. By a stalemate");
+            }
+            chess.move_variants.Clear();
+        }
+        private void ShowPieces()
+        {
+            for (int row = 0; row < 8; row++)
+            {
+                for (int col = 0; col < 8; col++)
+                {
+                    if (chess.board[row, col] != null)
+                    {
+                        Board.Children.Add(chess.board[row, col].img);
+                        Grid.SetRow(chess.board[row, col].img, row);
+                        Grid.SetColumn(chess.board[row, col].img, col);
+                    }
+                }
+            }
+        }
+        private void HidePieces()
+        {
+            Board.Children.Clear();
+        }
+        private void GameEnd(string message)
+        {
+            MessageBox.Show(message, "Game End", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            MessageBoxResult result = MessageBox.Show("Start new game?", "New game", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.No) Close();
+            HidePieces();
+            StartGame();
+
+            //InitBoard();
+        }
         private void ShowMoveVariants()
         {
             Label label;
@@ -292,8 +361,8 @@ namespace Chess_WPF
                 label.Style = Resources["Variant"] as Style;
                 move_variant_labels.Add(label);
                 Board.Children.Add(label);
-                Grid.SetRow(label, coords.Y + 1);
-                Grid.SetColumn(label, coords.X + 1);
+                Grid.SetRow(label, coords.Y);
+                Grid.SetColumn(label, coords.X);
             }
         }
         private void DelMoveVariants()

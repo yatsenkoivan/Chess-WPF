@@ -76,8 +76,8 @@ namespace Chess_WPF.Code
         {
             set
             {
-                Grid.SetColumn(player1_check_label, value.X+1);
-                Grid.SetRow(player1_check_label, value.Y+1);
+                Grid.SetColumn(player1_check_label, value.X);
+                Grid.SetRow(player1_check_label, value.Y);
                 player1_king_coords = value;
             }
             get
@@ -89,8 +89,8 @@ namespace Chess_WPF.Code
         {
             set
             {
-                Grid.SetColumn(player2_check_label, value.X+1);
-                Grid.SetRow(player2_check_label, value.Y+1);
+                Grid.SetColumn(player2_check_label, value.X);
+                Grid.SetRow(player2_check_label, value.Y);
                 player2_king_coords = value;
             }
             get

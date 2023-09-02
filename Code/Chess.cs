@@ -14,7 +14,8 @@ using System.Windows.Media.Media3D;
 
 namespace Chess_WPF.Code
 {
-    internal class Coord : IEquatable<Coord>
+    [Serializable]
+    public class Coord : IEquatable<Coord>
     {
         public int X { set; get; }
         public int Y { set; get; }
@@ -30,7 +31,8 @@ namespace Chess_WPF.Code
             return (this.X == other.X && this.Y == other.Y);
         }
     }
-    internal class Castling
+    [Serializable]
+    public class Castling
     {
         public bool Long;
         public bool Short;
@@ -40,7 +42,8 @@ namespace Chess_WPF.Code
             Short = true;
         }
     }
-    internal class Move
+    [Serializable]
+    public class Move
     {
         public Coord start;
         public Coord end;
@@ -50,7 +53,8 @@ namespace Chess_WPF.Code
             this.end = end;
         }
     }
-    internal class Chess
+    [Serializable]
+    public class Chess
     {
         public int player;
         #nullable enable
@@ -66,38 +70,8 @@ namespace Chess_WPF.Code
         public bool player1_checked;
         public bool player2_checked;
 
-        public Label player1_check_label;
-        public Label player2_check_label;
-
-        private Coord player1_king_coords;
-        private Coord player2_king_coords;
-
-        public Coord Player1_king
-        {
-            set
-            {
-                Grid.SetColumn(player1_check_label, value.X);
-                Grid.SetRow(player1_check_label, value.Y);
-                player1_king_coords = value;
-            }
-            get
-            {
-                return player1_king_coords;
-            }
-        }
-        public Coord Player2_king
-        {
-            set
-            {
-                Grid.SetColumn(player2_check_label, value.X);
-                Grid.SetRow(player2_check_label, value.Y);
-                player2_king_coords = value;
-            }
-            get
-            {
-                return player2_king_coords;
-            }
-        }
+        public Coord player1_king_coords;
+        public Coord player2_king_coords;
 
         public Chess()
         {
@@ -114,11 +88,8 @@ namespace Chess_WPF.Code
             player1_checked = false;
             player2_checked = false;
 
-            player1_check_label = new Label();
-            player2_check_label = new Label();
-
-            Player1_king = new Coord(4, 7);
-            Player2_king = new Coord(4, 0);
+            player1_king_coords = new Coord(4, 7);
+            player2_king_coords = new Coord(4, 0);
         }
         public void SetBoard()
         {
@@ -434,7 +405,7 @@ namespace Chess_WPF.Code
 
                 bool left_castling = true;  //long
                 bool right_castling = true; //short
-                //check if not piees between king and rook
+                //check if there are no pieces between king and rook
                 for (int i = 1; coords.X - i > 0 && coords.X + i < size_x - 1 && (left_castling || right_castling); i++)
                 {
                     if (board[coords.Y,coords.X + i] != null) right_castling = false;

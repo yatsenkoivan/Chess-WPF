@@ -15,6 +15,7 @@ using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Chess_WPF.Code;
+using Chess_WPF.Pages;
 
 namespace Chess_WPF
 {
@@ -25,7 +26,10 @@ namespace Chess_WPF
     {
         Chess chess;
         Label start_label;
+        Label player1_check_label;
+        Label player2_check_label;
         #nullable enable
+        Image?[,] piece_images;
         Coord? start_coords;
         Coord? Start
         {
@@ -53,13 +57,32 @@ namespace Chess_WPF
             InitializeComponent();
 
             StartGame();
-            
+        }
+        private void SetImages()
+        {
+            #nullable enable
+            BitmapImage? image;
+            #nullable disable
+            //HidePieces();
+            piece_images = new Image[chess.board.GetLength(0), chess.board.GetLength(1)];
+            for (int row=0; row<piece_images.GetLength(0); row++)
+            {
+                for (int col=0; col<piece_images.GetLength(1); col++)
+                {
+                    image = PieceImages.GetImage(chess.board[row, col]);
+                    if (image != null)
+                    {
+                        piece_images[row, col] = new Image() { Source = image };
+                    }
+                }
+            }
         }
         private void StartGame()
         {
             chess = new Chess();
             move_variant_labels = new HashSet<Label>();
 
+            SetImages();
             ShowPieces();
 
             start_label = new Label();
@@ -67,14 +90,19 @@ namespace Chess_WPF
             Board.Children.Add(start_label);
             Start = null;
 
-            chess.player1_check_label.Style = Resources["Checked"] as Style;
-            chess.player2_check_label.Style = Resources["Checked"] as Style;
+            player1_check_label = new Label();
+            player2_check_label = new Label();
 
-            chess.player1_check_label.Visibility = Visibility.Hidden;
-            chess.player2_check_label.Visibility = Visibility.Hidden;
+            player1_check_label.Style = Resources["Checked"] as Style;
+            player2_check_label.Style = Resources["Checked"] as Style;
 
-            Board.Children.Add(chess.player1_check_label);
-            Board.Children.Add(chess.player2_check_label);
+            player1_check_label.Visibility = Visibility.Hidden;
+            player2_check_label.Visibility = Visibility.Hidden;
+
+            Board.Children.Add(player1_check_label);
+            Board.Children.Add(player2_check_label);
+
+            UpdateCheckLabel();
 
             UpdateTitle();
         }
@@ -163,6 +191,14 @@ namespace Chess_WPF
             ShowMoveVariants();
             if (chess.move_variants.Count == 0) start_coords = null;
         }
+        private void UpdateCheckLabel()
+        {
+            Grid.SetRow(player1_check_label, chess.player1_king_coords.Y);
+            Grid.SetColumn(player1_check_label, chess.player1_king_coords.X);
+
+            Grid.SetRow(player2_check_label, chess.player2_king_coords.Y);
+            Grid.SetColumn(player2_check_label, chess.player2_king_coords.X);
+        }
         private void PieceMove(Coord start_coords, Coord end_coords)
         {
             int size_x = chess.board.GetLength(0);
@@ -179,7 +215,7 @@ namespace Chess_WPF
                 {
                     if (Math.Abs(end_coords.X - start_coords.X) == 1 && chess.board[end_coords.Y, end_coords.X] == null) //corner & empty
                     {
-                        Board.Children.Remove(chess.board[start_coords.Y, end_coords.X].img);
+                        Board.Children.Remove(piece_images[start_coords.Y, end_coords.X]);
                         chess.board[start_coords.Y, end_coords.X] = null;
                     }
                 }
@@ -200,15 +236,23 @@ namespace Chess_WPF
                 }
                 if (p.Type == Piece.Types.king)
                 {
-                    if (chess.player == 1) chess.Player1_king = end_coords;
-                    if (chess.player == 2) chess.Player2_king = end_coords;
+                    if (chess.player == 1)
+                    {
+                        chess.player1_king_coords = end_coords;
+                        UpdateCheckLabel();
+                    }
+                    if (chess.player == 2)
+                    {
+                        chess.player2_king_coords = end_coords;
+                        UpdateCheckLabel();
+                    }
                     //long castling
                     if (((chess.player == 1 && chess.player1_castling.Long)
                         ||
                         (chess.player == 2 && chess.player2_castling.Long))
                         && end_coords.X == 2)
                     {
-                        Grid.SetColumn(chess.board[end_coords.Y, 0].img, end_coords.X + 1);
+                        Grid.SetColumn(piece_images[end_coords.Y, 0], end_coords.X + 1);
 
                         chess.board[end_coords.Y, end_coords.X + 1] = chess.board[end_coords.Y, 0];
                         chess.board[end_coords.Y, 0] = null;
@@ -220,7 +264,7 @@ namespace Chess_WPF
                         (chess.player == 2 && chess.player2_castling.Short))
                         && end_coords.X == size_x - 1 - 1)
                     {
-                        Grid.SetColumn(chess.board[end_coords.Y, size_x - 1].img, end_coords.X - 1);
+                        Grid.SetColumn(piece_images[end_coords.Y, size_x - 1], end_coords.X - 1);
 
                         chess.board[end_coords.Y, end_coords.X - 1] = chess.board[end_coords.Y, size_x - 1];
                         chess.board[end_coords.Y, size_x - 1] = null;
@@ -243,10 +287,14 @@ namespace Chess_WPF
             chess.board[start_coords.Y, start_coords.X] = null;
             chess.board[end_coords.Y, end_coords.X] = start;
 
-            if (end != null) Board.Children.Remove(end.img);
+            if (end != null) Board.Children.Remove(piece_images[end_coords.Y, end_coords.X]);
 
-            Grid.SetRow(start.img, end_coords.Y);
-            Grid.SetColumn(start.img, end_coords.X);
+            piece_images[end_coords.Y, end_coords.X] = piece_images[start_coords.Y, start_coords.X];
+            piece_images[start_coords.Y, start_coords.X] = null;
+
+
+            Grid.SetRow(piece_images[end_coords.Y, end_coords.X], end_coords.Y);
+            Grid.SetColumn(piece_images[end_coords.Y, end_coords.X], end_coords.X);
 
             DelMoveVariants();
 
@@ -271,10 +319,10 @@ namespace Chess_WPF
         private void KingCheck(Coord coord)
         {
             chess.player1_checked = false;
-            chess.player1_check_label.Visibility = Visibility.Hidden;
+            player1_check_label.Visibility = Visibility.Hidden;
 
             chess.player2_checked = false;
-            chess.player2_check_label.Visibility = Visibility.Hidden;
+            player2_check_label.Visibility = Visibility.Hidden;
 
 
             if (chess.KingCheck(coord))
@@ -282,12 +330,12 @@ namespace Chess_WPF
                 if (chess.player == 1)
                 {
                     chess.player2_checked = true;
-                    chess.player2_check_label.Visibility = Visibility.Visible;
+                    player2_check_label.Visibility = Visibility.Visible;
                 }
                 if (chess.player == 2)
                 {
                     chess.player1_checked = true;
-                    chess.player1_check_label.Visibility = Visibility.Visible;
+                    player1_check_label.Visibility = Visibility.Visible;
                 }
             }
         }
@@ -325,27 +373,30 @@ namespace Chess_WPF
         }
         private void ShowPieces()
         {
-            for (int row = 0; row < 8; row++)
+            for (int row=0; row<8; row++)
             {
-                for (int col = 0; col < 8; col++)
+                for (int col=0; col<8; col++)
                 {
-                    if (chess.board[row, col] != null)
+                    if (piece_images[row, col] != null)
                     {
-                        Board.Children.Add(chess.board[row, col].img);
-                        Grid.SetRow(chess.board[row, col].img, row);
-                        Grid.SetColumn(chess.board[row, col].img, col);
+                        Board.Children.Add(piece_images[row,col]);
+                        Grid.SetRow(piece_images[row,col], row);
+                        Grid.SetColumn(piece_images[row, col], col);
                     }
                 }
             }
         }
         private void HidePieces()
         {
-            Board.Children.Clear();
+            foreach (Image img in piece_images)
+            {
+                if (Board.Children.Contains(img)) Board.Children.Remove(img);
+            }
         }
         private void GameEnd(string message)
         {
             MessageBox.Show(message, "Game End", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-            MessageBoxResult result = MessageBox.Show("Start new game?", "New game", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            MessageBoxResult result = MessageBox.Show("Start a new game?", "New game", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.No) Close();
             HidePieces();
             StartGame();
@@ -374,12 +425,35 @@ namespace Chess_WPF
             move_variant_labels.Clear();
             chess.DelMoveVariants();
         }
+        private void OpenMenu()
+        {
+            InGameMenu menu = new InGameMenu(chess);
+            menu.ShowDialog();
+
+            chess = menu.current;
+
+            UpdateTitle();
+            UpdateCheckLabel();
+
+            HidePieces();
+            SetImages();
+            ShowPieces();
+
+            if (chess.player1_checked) player1_check_label.Visibility = Visibility.Visible;
+            if (chess.player2_checked) player2_check_label.Visibility = Visibility.Visible;
+
+            //Close();
+        }
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.X)
             {
                 DelMoveVariants();
                 Start = null;
+            }
+            if (e.Key == Key.Escape)
+            {
+                OpenMenu();
             }
         }
     }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Chess_WPF.Code;
 
 static class PieceImages
 {
@@ -32,11 +33,34 @@ static class PieceImages
     public static readonly BitmapImage queen_white = new BitmapImage(new Uri(@"images/queen_white.png", UriKind.Relative));
     
     public static readonly BitmapImage queen_black = new BitmapImage(new Uri(@"images/queen_black.png", UriKind.Relative));
+
+    #nullable enable
+    public static BitmapImage? GetImage(Piece? piece)
+    {
+        if (piece == null) return null;
+        switch (piece.Type)
+        {
+            case Piece.Types.pawn:
+                return piece.Side == Piece.Sides.white ? pawn_white : pawn_black;
+            case Piece.Types.rook:
+                return piece.Side == Piece.Sides.white ? rook_white : rook_black;
+            case Piece.Types.knight:
+                return piece.Side == Piece.Sides.white ? knight_white : knight_black;
+            case Piece.Types.bishop:
+                return piece.Side == Piece.Sides.white ? bishop_white : bishop_black;
+            case Piece.Types.king:
+                return piece.Side == Piece.Sides.white ? king_white : king_black;
+            case Piece.Types.queen:
+                return piece.Side == Piece.Sides.white ? queen_white : queen_black;
+        }
+        return null;
+    }
 }
 
 namespace Chess_WPF.Code
 {
-    internal class Piece
+    [Serializable]
+    public class Piece
     {
         public enum Types
         {
@@ -46,48 +70,12 @@ namespace Chess_WPF.Code
         {
             white, black
         }
-        #nullable enable
-        public Image? img;
-        #nullable disable
         public Types Type { get; set; }
         public Sides Side { get; set; }
-
         public Piece(Types type, Sides side)
         {
             Type = type;
             Side = side;
-            img = new Image();
-            UpdateImage();
-        }
-        public void UpdateImage()
-        {
-            switch (Type)
-            {
-                case Types.pawn:
-                    if (Side == Sides.white) img.Source = PieceImages.pawn_white;
-                    if (Side == Sides.black) img.Source = PieceImages.pawn_black;
-                    break;
-                case Types.rook:
-                    if (Side == Sides.white) img.Source = PieceImages.rook_white;
-                    if (Side == Sides.black) img.Source = PieceImages.rook_black;
-                    break;
-                case Types.knight:
-                    if (Side == Sides.white) img.Source = PieceImages.knight_white;
-                    if (Side == Sides.black) img.Source = PieceImages.knight_black;
-                    break;
-                case Types.bishop:
-                    if (Side == Sides.white) img.Source = PieceImages.bishop_white;
-                    if (Side == Sides.black) img.Source = PieceImages.bishop_black;
-                    break;
-                case Types.king:
-                    if (Side == Sides.white) img.Source = PieceImages.king_white;
-                    if (Side == Sides.black) img.Source = PieceImages.king_black;
-                    break;
-                case Types.queen:
-                    if (Side == Sides.white) img.Source = PieceImages.queen_white;
-                    if (Side == Sides.black) img.Source = PieceImages.queen_black;
-                    break;
-            }
-        }   
+        } 
     }
 }

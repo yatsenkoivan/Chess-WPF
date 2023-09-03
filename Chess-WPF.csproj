@@ -72,12 +72,19 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Pages\CreateSave.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\InGameMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Pages\CreateSave.xaml.cs">
+      <DependentUpon>CreateSave.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\InGameMenu.xaml.cs">
       <DependentUpon>InGameMenu.xaml</DependentUpon>
     </Compile>

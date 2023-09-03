@@ -77,13 +77,12 @@ namespace Chess_WPF
                 }
             }
         }
-        private void StartGame()
+        private void StartGame(Chess game=null)
         {
-            chess = new Chess();
+            if (game == null) chess = new Chess();
+            else chess = game;
             move_variant_labels = new HashSet<Label>();
 
-            SetImages();
-            ShowPieces();
 
             start_label = new Label();
             start_label.Style = Resources["StartCell"] as Style;
@@ -96,15 +95,16 @@ namespace Chess_WPF
             player1_check_label.Style = Resources["Checked"] as Style;
             player2_check_label.Style = Resources["Checked"] as Style;
 
-            player1_check_label.Visibility = Visibility.Hidden;
-            player2_check_label.Visibility = Visibility.Hidden;
-
             Board.Children.Add(player1_check_label);
             Board.Children.Add(player2_check_label);
 
+            UpdateTitle();
             UpdateCheckLabel();
 
-            UpdateTitle();
+            UpdateCheckLabelVisibility();
+
+            SetImages();
+            ShowPieces();
         }
         private void ChangePlayer()
         {
@@ -395,10 +395,11 @@ namespace Chess_WPF
         }
         private void HidePieces()
         {
-            foreach (Image img in piece_images)
+            /*foreach (Image img in piece_images)
             {
                 if (Board.Children.Contains(img)) Board.Children.Remove(img);
-            }
+            }*/
+            Board.Children.Clear();
         }
         private void GameEnd(string message)
         {
@@ -439,14 +440,17 @@ namespace Chess_WPF
 
             chess = menu.current;
 
+            HidePieces();
+            StartGame(chess);
+
+            /*
             UpdateTitle();
             UpdateCheckLabel();
 
             UpdateCheckLabelVisibility();
 
-            HidePieces();
             SetImages();
-            ShowPieces();
+            ShowPieces();*/
 
             //Close();
         }

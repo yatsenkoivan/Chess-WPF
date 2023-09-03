@@ -199,6 +199,14 @@ namespace Chess_WPF
             Grid.SetRow(player2_check_label, chess.player2_king_coords.Y);
             Grid.SetColumn(player2_check_label, chess.player2_king_coords.X);
         }
+        private void UpdateCheckLabelVisibility()
+        {
+            if (chess.player1_checked) player1_check_label.Visibility = Visibility.Visible;
+            else player1_check_label.Visibility = Visibility.Hidden;
+
+            if (chess.player2_checked) player2_check_label.Visibility = Visibility.Visible;
+            else player2_check_label.Visibility = Visibility.Hidden;
+        }
         private void PieceMove(Coord start_coords, Coord end_coords)
         {
             int size_x = chess.board.GetLength(0);
@@ -319,10 +327,9 @@ namespace Chess_WPF
         private void KingCheck(Coord coord)
         {
             chess.player1_checked = false;
-            player1_check_label.Visibility = Visibility.Hidden;
-
             chess.player2_checked = false;
-            player2_check_label.Visibility = Visibility.Hidden;
+
+            UpdateCheckLabelVisibility();
 
 
             if (chess.KingCheck(coord))
@@ -330,14 +337,14 @@ namespace Chess_WPF
                 if (chess.player == 1)
                 {
                     chess.player2_checked = true;
-                    player2_check_label.Visibility = Visibility.Visible;
                 }
                 if (chess.player == 2)
                 {
                     chess.player1_checked = true;
-                    player1_check_label.Visibility = Visibility.Visible;
                 }
             }
+
+            UpdateCheckLabelVisibility();
         }
         private void GameEndCheck()
         {
@@ -435,12 +442,11 @@ namespace Chess_WPF
             UpdateTitle();
             UpdateCheckLabel();
 
+            UpdateCheckLabelVisibility();
+
             HidePieces();
             SetImages();
             ShowPieces();
-
-            if (chess.player1_checked) player1_check_label.Visibility = Visibility.Visible;
-            if (chess.player2_checked) player2_check_label.Visibility = Visibility.Visible;
 
             //Close();
         }

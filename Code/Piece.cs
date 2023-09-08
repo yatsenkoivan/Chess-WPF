@@ -10,29 +10,29 @@ using Chess_WPF.Code;
 
 static class PieceImages
 {
-    public static readonly BitmapImage pawn_white = new BitmapImage(new Uri(@"images/pawn_white.png", UriKind.Relative));
+    public static readonly BitmapImage pawn_white = new BitmapImage(new Uri(@"..\images/pawn_white.png", UriKind.Relative));
 
-    public static readonly BitmapImage pawn_black = new BitmapImage(new Uri(@"images/pawn_black.png", UriKind.Relative));
+    public static readonly BitmapImage pawn_black = new BitmapImage(new Uri(@"..\images/pawn_black.png", UriKind.Relative));
+                                                                              
+    public static readonly BitmapImage rook_white = new BitmapImage(new Uri(@"..\images/rook_white.png", UriKind.Relative));
+                                                                              
+    public static readonly BitmapImage rook_black = new BitmapImage(new Uri(@"..\images/rook_black.png", UriKind.Relative));      
     
-    public static readonly BitmapImage rook_white = new BitmapImage(new Uri(@"images/rook_white.png", UriKind.Relative));
+    public static readonly BitmapImage knight_white = new BitmapImage(new Uri(@"..\images/knight_white.png", UriKind.Relative));
     
-    public static readonly BitmapImage rook_black = new BitmapImage(new Uri(@"images/rook_black.png", UriKind.Relative));      
+    public static readonly BitmapImage knight_black =new BitmapImage(new Uri(@"..\images/knight_black.png", UriKind.Relative));
     
-    public static readonly BitmapImage knight_white = new BitmapImage(new Uri(@"images/knight_white.png", UriKind.Relative));
+    public static readonly BitmapImage bishop_white = new BitmapImage(new Uri(@"..\images/bishop_white.png", UriKind.Relative));
     
-    public static readonly BitmapImage knight_black =new BitmapImage(new Uri(@"images/knight_black.png", UriKind.Relative));
+    public static readonly BitmapImage bishop_black = new BitmapImage(new Uri(@"..\images/bishop_black.png", UriKind.Relative));
     
-    public static readonly BitmapImage bishop_white = new BitmapImage(new Uri(@"images/bishop_white.png", UriKind.Relative));
+    public static readonly BitmapImage king_white = new BitmapImage(new Uri(@"..\images/king_white.png", UriKind.Relative));
     
-    public static readonly BitmapImage bishop_black = new BitmapImage(new Uri(@"images/bishop_black.png", UriKind.Relative));
+    public static readonly BitmapImage king_black = new BitmapImage(new Uri(@"..\images/king_black.png", UriKind.Relative));
     
-    public static readonly BitmapImage king_white = new BitmapImage(new Uri(@"images/king_white.png", UriKind.Relative));
+    public static readonly BitmapImage queen_white = new BitmapImage(new Uri(@"..\images/queen_white.png", UriKind.Relative));
     
-    public static readonly BitmapImage king_black = new BitmapImage(new Uri(@"images/king_black.png", UriKind.Relative));
-    
-    public static readonly BitmapImage queen_white = new BitmapImage(new Uri(@"images/queen_white.png", UriKind.Relative));
-    
-    public static readonly BitmapImage queen_black = new BitmapImage(new Uri(@"images/queen_black.png", UriKind.Relative));
+    public static readonly BitmapImage queen_black = new BitmapImage(new Uri(@"..\images/queen_black.png", UriKind.Relative));
 
     #nullable enable
     public static BitmapImage? GetImage(Piece? piece)

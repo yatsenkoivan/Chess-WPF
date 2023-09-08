@@ -24,6 +24,7 @@ namespace Chess_WPF.Pages
     public partial class InGameMenu : Window
     {
         public Chess current;
+        public ChessGame selectedGame;
         public static string saveFolder = "saves";
         public InGameMenu(Chess current)
         {
@@ -68,54 +69,66 @@ namespace Chess_WPF.Pages
 
             //cancel overwriting
             if (SaveOverWriteCheck(saveName) == false) return;
-            FileStream fs = new FileStream(saveFolder+"/"+saveName, FileMode.OpenOrCreate);
             try
             {
+                FileStream fs = new FileStream(saveFolder+"/"+saveName, FileMode.OpenOrCreate);
                 bf.Serialize(fs, current);
                 MessageBox.Show("Successfully saved", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                fs.Close();
+                Saves_SelectionChanged(Saves, null);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            finally
-            {
-                fs.Close();
-            }
         }
-
-        private void Load(object sender, RoutedEventArgs e)
+        private Chess LoadGame()
         {
             BinaryFormatter bf = new BinaryFormatter();
             SaveFolderCheck();
 
             string saveName = Saves.SelectedItem.ToString();
 
-            FileStream fs = new FileStream(saveFolder + "/" + saveName, FileMode.Open);
-            
+            Chess game;
+
             try
             {
-                current = bf.Deserialize(fs) as Chess;
-                MessageBox.Show("Successfully loaded", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                using (FileStream fs = new FileStream(saveFolder + "/" + saveName, FileMode.Open))
+                {
+                    game = bf.Deserialize(fs) as Chess;
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            return game;
+        }
+        private void Load(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                current = LoadGame();
+                if (current == null) throw new Exception("Failed to load save");
+                MessageBox.Show("Successfully loaded.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            finally
-            {
-                fs.Close();
+                return;
             }
         }
         private void DisableButtons()
         {
             SaveButton.IsEnabled = false;
             LoadButton.IsEnabled = false;
+            RemoveButton.IsEnabled = false;
         }
         private void EnableButtons()
         {
             SaveButton.IsEnabled = true;
             LoadButton.IsEnabled = true;
+            RemoveButton.IsEnabled = true;
         }
 
         private bool SaveEmpty(string name)
@@ -137,13 +150,41 @@ namespace Chess_WPF.Pages
                 Saves.SelectedItem = saveName;
             }
         }
+        private void DelFrame()
+        {
+            GameFrame.Content = null;
+        }
+        private void SetFrame()
+        {
+            selectedGame = new ChessGame();
+            Chess game = LoadGame();
+            if (game != null)
+                selectedGame.StartGame(game);
+            if (selectedGame == null) GameFrame.Source = null;
+            else GameFrame.Content = selectedGame;
+        }
         private void Saves_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             EnableButtons();
-            if (SaveEmpty((sender as ComboBox).SelectedItem.ToString()))
+            ComboBox comboBox = sender as ComboBox;
+            if (comboBox.SelectedItem == null)
+            {
+                DisableButtons();
+                DelFrame();
+                return;
+            }
+            if (SaveEmpty(comboBox.SelectedItem.ToString()))
             {
                 LoadButton.IsEnabled = false;
             }
+            SetFrame();
+        }
+
+        private void Remove(object sender, RoutedEventArgs e)
+        {
+            File.Delete(saveFolder + "/" + Saves.SelectedItem.ToString());
+            MessageBox.Show("Successfully removed", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            Saves.Items.Remove(Saves.SelectedItem);
         }
     }
 }

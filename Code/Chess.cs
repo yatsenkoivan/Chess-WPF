@@ -73,6 +73,10 @@ namespace Chess_WPF.Code
         public Coord player1_king_coords;
         public Coord player2_king_coords;
 
+        //50 moves rule
+        static public double _50moves = 50;
+        public double _50moves_counter;
+
         public Chess()
         {
             board = new Piece[8, 8];
@@ -90,6 +94,8 @@ namespace Chess_WPF.Code
 
             player1_king_coords = new Coord(4, 7);
             player2_king_coords = new Coord(4, 0);
+
+            _50moves_counter = _50moves;
         }
         public void SetBoard()
         {

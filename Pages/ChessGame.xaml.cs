@@ -177,80 +177,84 @@ namespace Chess_WPF.Pages
             Piece end = chess.board[end_coords.Y, end_coords.X];
 
             Piece p = chess.board[start_coords.Y, start_coords.X];
-            if (p != null)
+
+            if (p == null) return;
+            chess._50moves_counter -= 0.5;
+            if (p.Type == Piece.Types.pawn || end != null)
             {
+                chess._50moves_counter = Chess._50moves;
+            }
 
-                //EN PASSANT
-                if (p.Type == Piece.Types.pawn)
+            //EN PASSANT
+            if (p.Type == Piece.Types.pawn)
+            {
+                if (Math.Abs(end_coords.X - start_coords.X) == 1 && chess.board[end_coords.Y, end_coords.X] == null) //corner & empty
                 {
-                    if (Math.Abs(end_coords.X - start_coords.X) == 1 && chess.board[end_coords.Y, end_coords.X] == null) //corner & empty
-                    {
-                        Board.Children.Remove(piece_images[start_coords.Y, end_coords.X]);
-                        chess.board[start_coords.Y, end_coords.X] = null;
-                    }
+                    Board.Children.Remove(piece_images[start_coords.Y, end_coords.X]);
+                    chess.board[start_coords.Y, end_coords.X] = null;
+                }
+            }
+
+            //KING CASTLING
+            if (p.Type == Piece.Types.rook)
+            {
+                if (start_coords.X == 0)
+                {
+                    if (chess.player == 1) chess.player1_castling.Long = false;
+                    if (chess.player == 2) chess.player2_castling.Long = false;
+                }
+                if (start_coords.X == size_x - 1)
+                {
+                    if (chess.player == 1) chess.player1_castling.Short = false;
+                    if (chess.player == 2) chess.player2_castling.Short = false;
+                }
+            }
+            if (p.Type == Piece.Types.king)
+            {
+                if (chess.player == 1)
+                {
+                    chess.player1_king_coords = end_coords;
+                    UpdateCheckLabel();
+                }
+                if (chess.player == 2)
+                {
+                    chess.player2_king_coords = end_coords;
+                    UpdateCheckLabel();
+                }
+                //long castling
+                if (((chess.player == 1 && chess.player1_castling.Long)
+                    ||
+                    (chess.player == 2 && chess.player2_castling.Long))
+                    && end_coords.X == 2)
+                {
+                    Grid.SetColumn(piece_images[end_coords.Y, 0], end_coords.X + 1);
+
+                    chess.board[end_coords.Y, end_coords.X + 1] = chess.board[end_coords.Y, 0];
+                    chess.board[end_coords.Y, 0] = null;
                 }
 
-                //KING CASTLING
-                if (p.Type == Piece.Types.rook)
+                //short castling
+                if (((chess.player == 1 && chess.player1_castling.Short)
+                    ||
+                    (chess.player == 2 && chess.player2_castling.Short))
+                    && end_coords.X == size_x - 1 - 1)
                 {
-                    if (start_coords.X == 0)
-                    {
-                        if (chess.player == 1) chess.player1_castling.Long = false;
-                        if (chess.player == 2) chess.player2_castling.Long = false;
-                    }
-                    if (start_coords.X == size_x - 1)
-                    {
-                        if (chess.player == 1) chess.player1_castling.Short = false;
-                        if (chess.player == 2) chess.player2_castling.Short = false;
-                    }
+                    Grid.SetColumn(piece_images[end_coords.Y, size_x - 1], end_coords.X - 1);
+
+                    chess.board[end_coords.Y, end_coords.X - 1] = chess.board[end_coords.Y, size_x - 1];
+                    chess.board[end_coords.Y, size_x - 1] = null;
                 }
-                if (p.Type == Piece.Types.king)
+
+
+                if (chess.player == 1)
                 {
-                    if (chess.player == 1)
-                    {
-                        chess.player1_king_coords = end_coords;
-                        UpdateCheckLabel();
-                    }
-                    if (chess.player == 2)
-                    {
-                        chess.player2_king_coords = end_coords;
-                        UpdateCheckLabel();
-                    }
-                    //long castling
-                    if (((chess.player == 1 && chess.player1_castling.Long)
-                        ||
-                        (chess.player == 2 && chess.player2_castling.Long))
-                        && end_coords.X == 2)
-                    {
-                        Grid.SetColumn(piece_images[end_coords.Y, 0], end_coords.X + 1);
-
-                        chess.board[end_coords.Y, end_coords.X + 1] = chess.board[end_coords.Y, 0];
-                        chess.board[end_coords.Y, 0] = null;
-                    }
-
-                    //short castling
-                    if (((chess.player == 1 && chess.player1_castling.Short)
-                        ||
-                        (chess.player == 2 && chess.player2_castling.Short))
-                        && end_coords.X == size_x - 1 - 1)
-                    {
-                        Grid.SetColumn(piece_images[end_coords.Y, size_x - 1], end_coords.X - 1);
-
-                        chess.board[end_coords.Y, end_coords.X - 1] = chess.board[end_coords.Y, size_x - 1];
-                        chess.board[end_coords.Y, size_x - 1] = null;
-                    }
-
-
-                    if (chess.player == 1)
-                    {
-                        chess.player1_castling.Long = false;
-                        chess.player1_castling.Short = false;
-                    }
-                    if (chess.player == 2)
-                    {
-                        chess.player2_castling.Long = false;
-                        chess.player2_castling.Short = false;
-                    }
+                    chess.player1_castling.Long = false;
+                    chess.player1_castling.Short = false;
+                }
+                if (chess.player == 2)
+                {
+                    chess.player2_castling.Long = false;
+                    chess.player2_castling.Short = false;
                 }
             }
 
@@ -312,6 +316,14 @@ namespace Chess_WPF.Pages
         {
             int size_y = chess.board.GetLength(0);
             int size_x = chess.board.GetLength(1);
+
+            //50 moves rule
+            if (chess._50moves_counter == 0)
+            {
+                GameEnd("Draw! by a 50 moves rule");
+                chess.move_variants.Clear();
+                return;
+            }
 
             //CheckMate / StaleMate check
             for (int row = 0; row < size_y && chess.move_variants.Count == 0; row++)

@@ -45,7 +45,7 @@ namespace Chess_WPF.Pages
 
             foreach (string save in saves)
             {
-                Saves.Items.Add(save);
+                AddSave(save);
             }
         }
         private void SaveFolderCheck()
@@ -65,7 +65,7 @@ namespace Chess_WPF.Pages
             BinaryFormatter bf = new BinaryFormatter();
             SaveFolderCheck();
 
-            string saveName = Saves.SelectedItem.ToString();
+            string saveName = (Saves.SelectedItem as ComboBoxItem).Content.ToString();
 
             //cancel overwriting
             if (SaveOverWriteCheck(saveName) == false) return;
@@ -87,7 +87,7 @@ namespace Chess_WPF.Pages
             BinaryFormatter bf = new BinaryFormatter();
             SaveFolderCheck();
 
-            string saveName = Saves.SelectedItem.ToString();
+            string saveName = (Saves.SelectedItem as ComboBoxItem).Content.ToString();
 
             Chess game;
 
@@ -139,15 +139,18 @@ namespace Chess_WPF.Pages
             if (len == 0) return true;
             return false;
         }
-        private void Add(object sender, RoutedEventArgs e)
+        private void AddSave(string name)
+        {
+            Saves.Items.Add(new ComboBoxItem() { Content = name, Background = Saves.Background });
+        }
+        private void Create(object sender, RoutedEventArgs e)
         {
             CreateSave createSave_page = new CreateSave();
             createSave_page.ShowDialog();
             if (createSave_page.DialogResult == true)
             {
                 string saveName = createSave_page.SaveName;
-                Saves.Items.Add(saveName);
-                Saves.SelectedItem = saveName;
+                AddSave(saveName);
             }
         }
         private void DelFrame()
@@ -167,13 +170,13 @@ namespace Chess_WPF.Pages
         {
             EnableButtons();
             ComboBox comboBox = sender as ComboBox;
-            if (comboBox.SelectedItem == null)
+            if ((comboBox.SelectedItem as ComboBoxItem) == null)
             {
                 DisableButtons();
                 DelFrame();
                 return;
             }
-            if (SaveEmpty(comboBox.SelectedItem.ToString()))
+            if (SaveEmpty((comboBox.SelectedItem as ComboBoxItem).Content.ToString()))
             {
                 LoadButton.IsEnabled = false;
             }
@@ -182,7 +185,7 @@ namespace Chess_WPF.Pages
 
         private void Remove(object sender, RoutedEventArgs e)
         {
-            File.Delete(saveFolder + "/" + Saves.SelectedItem.ToString());
+            File.Delete(saveFolder + "/" + (Saves.SelectedItem as ComboBoxItem).Content.ToString());
             MessageBox.Show("Successfully removed", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             Saves.Items.Remove(Saves.SelectedItem);
         }

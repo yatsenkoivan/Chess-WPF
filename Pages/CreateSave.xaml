@@ -3,9 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:Chess_WPF.Pages"
         mc:Ignorable="d"
-        Title="Create Save" Height="300" Width="400" MinHeight="300" MinWidth="400" MaxHeight="600" MaxWidth="800">
+        Title="Create Save" Height="300" Width="400" MinHeight="300" MinWidth="400" MaxHeight="600" MaxWidth="800" Background="LightBlue">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -17,8 +18,7 @@
                 <ColumnDefinition Width="0.5*"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Label Content="Save name: " VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="22"/>
-            <TextBox x:Name="saveName" Grid.Column="1" Margin="10,50,10,50" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" TextChanged="saveName_TextChanged"/>
+            <TextBox x:Name="saveName" Grid.ColumnSpan="2" Margin="10,50,10,50" materialDesign:HintAssist.Hint="Save Name" FontSize="18" VerticalAlignment="Center" materialDesign:TextFieldAssist.UnderlineBrush="#000000" materialDesign:HintAssist.HintOpacity="1" materialDesign:ColorZoneAssist.Background="#000000" materialDesign:ColorZoneAssist.Foreground="#000000" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" TextChanged="saveName_TextChanged"/>
         </Grid>
         <!-- BUTTON -->
         <Grid Grid.Row="1">
@@ -26,8 +26,8 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="createButton" Grid.Column="0" Content="Create" Margin="40,40,40,40" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="24" Click="Create"/>
-            <Button x:Name="cancelButton" Grid.Column="1" Content="Cancel" Margin="40,40,40,40" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="24" Click="Cancel"/>
+            <Button x:Name="createButton" Grid.Column="0" Background="#09ecf3" BorderBrush="#09ecf3" Content="Create" Height="75" Margin="40,20,40,20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="18" Click="Create"/>
+            <Button x:Name="cancelButton" Grid.Column="1" Background="#09ecf3" BorderBrush="#09ecf3" Content="Cancel" Height="75" Margin="40,20,40,20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="18" Click="Cancel"/>
         </Grid>
     </Grid>
 </Window>

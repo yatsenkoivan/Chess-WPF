@@ -100,6 +100,11 @@ namespace Chess_WPF
             //MOVED
             Game.Click(coords);
             UpdateTitle();
+
+
+            //Close game
+            if (Game.Content == null) Close();
+
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

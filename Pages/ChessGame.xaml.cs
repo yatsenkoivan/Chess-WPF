@@ -379,7 +379,11 @@ namespace Chess_WPF.Pages
         {
             MessageBox.Show(message, "Game End", MessageBoxButton.OK, MessageBoxImage.Asterisk);
             MessageBoxResult result = MessageBox.Show("Start a new game?", "New game", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            //if (result == MessageBoxResult.No) Close();
+            if (result == MessageBoxResult.No)
+            {
+                Content = null;
+                return;
+            }
             HidePieces();
             StartGame();
 

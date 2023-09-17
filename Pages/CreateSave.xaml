@@ -26,8 +26,8 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="createButton" Grid.Column="0" Background="#09ecf3" BorderBrush="#09ecf3" Content="Create" Height="75" Margin="40,20,40,20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="18" Click="Create"/>
-            <Button x:Name="cancelButton" Grid.Column="1" Background="#09ecf3" BorderBrush="#09ecf3" Content="Cancel" Height="75" Margin="40,20,40,20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="18" Click="Cancel"/>
+            <Button x:Name="createButton" Grid.Column="0" Background="#09ecf3" BorderBrush="#09ecf3" Content="Create" Height="75" Margin="40,20,40,20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="18" Click="Create" Foreground="#000000"/>
+            <Button x:Name="cancelButton" Grid.Column="1" Background="#09ecf3" BorderBrush="#09ecf3" Content="Cancel" Height="75" Margin="40,20,40,20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="18" Click="Cancel" Foreground="#000000"/>
         </Grid>
     </Grid>
 </Window>

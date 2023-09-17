@@ -87,12 +87,12 @@ namespace Chess_WPF.Pages
             BinaryFormatter bf = new BinaryFormatter();
             SaveFolderCheck();
 
-            string saveName = (Saves.SelectedItem as ComboBoxItem).Content.ToString();
 
             Chess game;
 
             try
             {
+                string saveName = (Saves.SelectedItem as ComboBoxItem).Content.ToString();
                 using (FileStream fs = new FileStream(saveFolder + "/" + saveName, FileMode.Open))
                 {
                     game = bf.Deserialize(fs) as Chess;
@@ -133,11 +133,18 @@ namespace Chess_WPF.Pages
 
         private bool SaveEmpty(string name)
         {
-            FileStream fs = new FileStream(saveFolder + "/" + name, FileMode.Open);
-            long len = fs.Length;
-            fs.Close();
-            if (len == 0) return true;
-            return false;
+            try
+            {
+                FileStream fs = new FileStream(saveFolder + "/" + name, FileMode.Open);
+                long len = fs.Length;
+                fs.Close();
+                if (len == 0) return true;
+                return false;
+            }
+            catch (Exception)
+            {
+                return true;
+            }
         }
         private void AddSave(string name)
         {

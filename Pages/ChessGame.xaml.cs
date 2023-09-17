@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -132,7 +133,7 @@ namespace Chess_WPF.Pages
         {
             //incorrect end cell
             if (CheckMove(Start, coords) == false) return;
-            PieceMove(Start, coords);
+            if (PieceMove(Start, coords) == false) return;
 
             KingCheck(coords);
             Start = null;
@@ -169,7 +170,7 @@ namespace Chess_WPF.Pages
             if (chess.player2_checked) player2_check_label.Visibility = Visibility.Visible;
             else player2_check_label.Visibility = Visibility.Hidden;
         }
-        private void PieceMove(Coord start_coords, Coord end_coords)
+        private bool PieceMove(Coord start_coords, Coord end_coords)
         {
             int size_x = chess.board.GetLength(0);
 
@@ -178,11 +179,29 @@ namespace Chess_WPF.Pages
 
             Piece p = chess.board[start_coords.Y, start_coords.X];
 
-            if (p == null) return;
+            if (p == null) return false;
             chess._50moves_counter -= 0.5;
+            //PAWN MOVED / PIECE CAPTURED
             if (p.Type == Piece.Types.pawn || end != null)
             {
                 chess._50moves_counter = Chess._50moves;
+            }
+            //PAWN PROMOTION
+            if (p.Type == Piece.Types.pawn &&
+                ((p.Side == Piece.Sides.white && end_coords.Y == 0) || (p.Side == Piece.Sides.black && end_coords.Y == size_x - 1))
+               )
+            {
+                PawnPromotion dialog = new PawnPromotion();
+                dialog.ShowDialog();
+                if (dialog.DialogResult == true)
+                {
+                    chess.board[start_coords.Y, start_coords.X].Type = dialog.GetPieceType();
+                    piece_images[start_coords.Y, start_coords.X].Source = PieceImages.GetImage(chess.board[start_coords.Y, start_coords.X]);
+                }
+                else
+                {
+                    return false;
+                }
             }
 
             //EN PASSANT
@@ -280,6 +299,8 @@ namespace Chess_WPF.Pages
             {
                 chess.player2_moves.Add(new Move(start_coords, end_coords));
             }
+
+            return true;
         }
         private bool CheckMove(Coord start_coords, Coord end_coords)
         {

@@ -34,9 +34,9 @@
         <Border BorderThickness="2" BorderBrush="#000000" Grid.Column="1" Margin="20,20,20,20">
             <Frame x:Name="GameFrame" Grid.Column="1" NavigationUIVisibility="Hidden"/>
         </Border>
-        <Button x:Name="SaveButton" Grid.Column="0" Grid.Row="0" Margin="40,20,40,20" Height="75" FontSize="18" Content="Save" Click="Save" ToolTip="Save current game" Background="#09ecf3" BorderBrush="#09ecf3"/>
-        <Button x:Name="LoadButton" Grid.Column="0" Grid.Row="1" Margin="40,20,40,20" Height="75" FontSize="18" Content="Load" Click="Load" ToolTip="Load a game" Background="#09ecf3" BorderBrush="#09ecf3"/>
-        <Button x:Name="CreateButton" Grid.Column="2" Grid.Row="1" Margin="30,20,30,20" Height="75" FontSize="18" Content="Create" Click="Create" ToolTip="Create a new save file" Background="#00fa9a" BorderBrush="#00fa9a"/>
+        <Button x:Name="SaveButton" Grid.Column="0" Grid.Row="0" Margin="40,20,40,20" Height="75" FontSize="18" Content="Save" Click="Save" ToolTip="Save current game" Background="#09ecf3" BorderBrush="#09ecf3" Foreground="#000000"/>
+        <Button x:Name="LoadButton" Grid.Column="0" Grid.Row="1" Margin="40,20,40,20" Height="75" FontSize="18" Content="Load" Click="Load" ToolTip="Load a game" Background="#09ecf3" BorderBrush="#09ecf3" Foreground="#000000"/>
+        <Button x:Name="CreateButton" Grid.Column="2" Grid.Row="1" Margin="30,20,30,20" Height="75" FontSize="18" Content="Create" Click="Create" ToolTip="Create a new save file" Background="#00fa9a" BorderBrush="#00fa9a" Foreground="#000000"/>
         <Button x:Name="RemoveButton" Grid.Column="1" Grid.Row="1" Margin="30,20,30,20" Height="75" FontSize="18" Content="Remove" Click="Remove" ToolTip="Remove a save file" Background="#9b111e" BorderBrush="#9b111e" Foreground="#ffffff"/>
     </Grid>
 </Window>

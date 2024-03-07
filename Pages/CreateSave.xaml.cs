@@ -38,6 +38,11 @@ namespace Chess_WPF.Pages
 
         private void Create(object sender, RoutedEventArgs e)
         {
+            if (saveName.Text == "")
+            {
+                MessageBox.Show("File name cannot be empty!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             //save already exists
             if (File.Exists(InGameMenu.saveFolder + "/" + SaveName) == true)
             {

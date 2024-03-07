@@ -101,6 +101,8 @@ namespace Chess_WPF
             Game.Click(coords);
             UpdateTitle();
 
+            if(Game.Chess.move_variants.Count == 0) Game.GameEndCheck();
+
 
             //Close game
             if (Game.Content == null) Close();

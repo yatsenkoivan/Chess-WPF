@@ -139,7 +139,6 @@ namespace Chess_WPF.Pages
             Start = null;
             ChangePlayer();
 
-            GameEndCheck();
         }
         private void ChooseStart(Coord coords)
         {
@@ -333,7 +332,7 @@ namespace Chess_WPF.Pages
 
             UpdateCheckLabelVisibility();
         }
-        private void GameEndCheck()
+        public void GameEndCheck()
         {
             int size_y = chess.board.GetLength(0);
             int size_x = chess.board.GetLength(1);
@@ -342,7 +341,6 @@ namespace Chess_WPF.Pages
             if (chess._50moves_counter == 0)
             {
                 GameEnd("Draw! by a 50 moves rule");
-                chess.move_variants.Clear();
                 return;
             }
 
@@ -371,7 +369,6 @@ namespace Chess_WPF.Pages
                 else
                     GameEnd("Draw. By a stalemate");
             }
-            chess.move_variants.Clear();
         }
         private void ShowPieces()
         {

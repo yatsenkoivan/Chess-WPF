@@ -430,8 +430,9 @@ namespace Chess_WPF.Code
             int size_y = board.GetLength(0);
             int size_x = board.GetLength(1);
 
+
             if (start.X < 0 || start.X > size_x - 1 || start.Y < 0 || start.Y > size_y - 1) return false;
-            Piece p = board[start.Y,start.X];
+            Piece p = board[start.Y, start.X];
             if (p == null)
                 return false;
 
@@ -446,21 +447,19 @@ namespace Chess_WPF.Code
                     if (coords.Equals(player2_king_coords))
                     {
                         flag = true;
-                        break;
                     }
                 }
                 if (p.Side == Piece.Sides.black)
                 {
                     if (coords.Equals(player1_king_coords))
                     {
-                        flag = true;
-                        break;
+                        flag = false;
                     }
                 }
             }
-
             move_variants.Clear();
             return flag;
+            
         }
         public void DelCheckMateMoves(Coord start)
         {

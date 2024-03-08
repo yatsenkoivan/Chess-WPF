@@ -135,7 +135,7 @@ namespace Chess_WPF.Pages
             if (CheckMove(Start, coords) == false) return;
             if (PieceMove(Start, coords) == false) return;
 
-            KingCheck(coords);
+            KingCheck();
             Start = null;
             ChangePlayer();
 
@@ -310,7 +310,7 @@ namespace Chess_WPF.Pages
 
             return true;
         }
-        private void KingCheck(Coord coord)
+        private void KingCheck()
         {
             chess.player1_checked = false;
             chess.player2_checked = false;
@@ -318,15 +318,24 @@ namespace Chess_WPF.Pages
             UpdateCheckLabelVisibility();
 
 
-            if (chess.KingCheck(coord))
+            for (int row=0; row<chess.board.GetLength(0); row++)
             {
-                if (chess.player == 1)
+                for (int col=0; col<chess.board.GetLength(1); col++)
                 {
-                    chess.player2_checked = true;
-                }
-                if (chess.player == 2)
-                {
-                    chess.player1_checked = true;
+                    Coord coord = new Coord(col, row);
+                    if (chess.KingCheck(coord))
+                    {
+                        if (chess.player == 1)
+                        {
+                            chess.player2_checked = true;
+                            break;
+                        }
+                        if (chess.player == 2)
+                        {
+                            chess.player1_checked = true;
+                            break;
+                        }
+                    }
                 }
             }
 

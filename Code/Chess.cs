@@ -172,6 +172,12 @@ namespace Chess_WPF.Code
                             && player2_moves.Last().start.Equals(new Coord(coords.X - 1, coords.Y - 2)) //from
                             && player2_moves.Last().end.Equals(new Coord(coords.X - 1, coords.Y))) //to
                             move_variants.Add(new Coord(coords.X - 1, coords.Y - 1));
+
+                        if (coords.X <= size_x - 1 - 1 && board[coords.Y, coords.X + 1] != null
+                            && board[coords.Y, coords.X + 1].Type == Piece.Types.pawn && board[coords.Y, coords.X + 1].Side == Piece.Sides.black
+                            && player2_moves.Last().start.Equals(new Coord(coords.X + 1, coords.Y - 2)) //from
+                            && player2_moves.Last().end.Equals(new Coord(coords.X + 1, coords.Y))) //to
+                            move_variants.Add(new Coord(coords.X + 1, coords.Y - 1));
                     }
                 }
 
@@ -193,6 +199,12 @@ namespace Chess_WPF.Code
                     //en passant
                     if (coords.Y == 4)
                     {
+                        if (coords.X >= 1 && board[coords.Y, coords.X - 1] != null
+                            && board[coords.Y, coords.X - 1].Type == Piece.Types.pawn && board[coords.Y, coords.X - 1].Side == Piece.Sides.white
+                            && player1_moves.Last().start.Equals(new Coord(coords.X - 1, coords.Y + 2)) //from
+                            && player1_moves.Last().end.Equals(new Coord(coords.X - 1, coords.Y))) //to
+                            move_variants.Add(new Coord(coords.X - 1, coords.Y + 1));
+
                         if (coords.X <= size_x - 1 - 1 && board[coords.Y,coords.X + 1] != null
                             && board[coords.Y,coords.X + 1].Type == Piece.Types.pawn && board[coords.Y,coords.X + 1].Side == Piece.Sides.white
                             && player1_moves.Last().start.Equals(new Coord(coords.X + 1, coords.Y + 2)) //from

@@ -465,7 +465,7 @@ namespace Chess_WPF.Code
                 {
                     if (coords.Equals(player1_king_coords))
                     {
-                        flag = false;
+                        flag = true;
                     }
                 }
             }
